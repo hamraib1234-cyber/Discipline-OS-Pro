@@ -1,0 +1,1949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DisciplineOS Pro - The Ultimate Productivity Operating System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --border: #e5e7eb;
+        }
+
+        [data-theme="dark"] {
+            --primary: #818cf8;
+            --primary-dark: #6366f1;
+            --secondary: #fbbf24;
+            --success: #34d399;
+            --danger: #f87171;
+            --warning: #fbbf24;
+            --info: #60a5fa;
+            --dark: #f9fafb;
+            --light: #111827;
+            --border: #374151;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] body {
+            background: #0f172a;
+            color: #f1f5f9;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        [data-theme="dark"] .glass-effect {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        [data-theme="dark"] .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .timer-display {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.3s ease;
+            fill: transparent;
+            stroke: var(--primary);
+            stroke-width: 8;
+        }
+
+        .founder-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .founder-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.1)"><polygon points="1000,100 1000,0 0,100"/></svg>');
+            background-size: cover;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .social-link:hover {
+            transform: translateY(-5px) scale(1.1);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .chart-container {
+            height: 300px !important;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .timer-display {
+                font-size: 2.5rem;
+            }
+            
+            .tab-button {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="gradient-bg text-white py-6 mb-8">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-bolt text-2xl text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold">DisciplineOS Pro</h1>
+                        <p class="text-blue-100 text-sm">The Ultimate Productivity Operating System</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="themeToggle" class="p-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all">
+                        <i class="fas fa-moon text-white"></i>
+                    </button>
+                    <button id="exportBtn" class="btn bg-white bg-opacity-20 hover:bg-opacity-30 text-white">
+                        <i class="fas fa-download"></i>
+                        Export Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="max-w-7xl mx-auto px-4 mb-8">
+        <div class="flex flex-wrap gap-2 bg-gray-100 dark:bg-gray-800 p-2 rounded-xl">
+            <button class="tab-button active" data-tab="instructions">
+                <i class="fas fa-book-open mr-2"></i>Instructions
+            </button>
+            <button class="tab-button" data-tab="dashboard">
+                <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+            </button>
+            <button class="tab-button" data-tab="tracker">
+                <i class="fas fa-clock mr-2"></i>Daily Tracker
+            </button>
+            <button class="tab-button" data-tab="tasks">
+                <i class="fas fa-tasks mr-2"></i>Task Breakdown
+            </button>
+            <button class="tab-button" data-tab="distractions">
+                <i class="fas fa-shield-alt mr-2"></i>Distraction Log
+            </button>
+            <button class="tab-button" data-tab="focus">
+                <i class="fas fa-brain mr-2"></i>Focus Timer
+            </button>
+            <button class="tab-button" data-tab="goals">
+                <i class="fas fa-bullseye mr-2"></i>Goals
+            </button>
+            <button class="tab-button" data-tab="analytics">
+                <i class="fas fa-chart-line mr-2"></i>Analytics
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4">
+        
+        <!-- Instructions Tab -->
+        <div id="instructions" class="tab-content">
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="card p-6">
+                    <h2 class="text-2xl font-bold mb-4 text-indigo-600">Quick Start Guide</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <span class="bg-indigo-100 text-indigo-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">1</span>
+                            <div>
+                                <h3 class="font-semibold">Set Your Daily Schedule</h3>
+                                <p class="text-gray-600 text-sm">Go to Daily Tracker and plan your time blocks for maximum productivity.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <span class="bg-indigo-100 text-indigo-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">2</span>
+                            <div>
+                                <h3 class="font-semibold">Break Down Complex Tasks</h3>
+                                <p class="text-gray-600 text-sm">Use Task Breakdown to convert big projects into manageable micro-tasks.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <span class="bg-indigo-100 text-indigo-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">3</span>
+                            <div>
+                                <h3 class="font-semibold">Track Distractions</h3>
+                                <p class="text-gray-600 text-sm">Log interruptions in real-time to identify patterns and triggers.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <span class="bg-indigo-100 text-indigo-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">4</span>
+                            <div>
+                                <h3 class="font-semibold">Use Focus Timer</h3>
+                                <p class="text-gray-600 text-sm">Start focused work sessions with customizable intervals (25-120 minutes).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-6">
+                    <h2 class="text-2xl font-bold mb-4 text-green-600">Key Features</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            <span>Real-time data persistence</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            <span>Advanced analytics and insights</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            <span>Customizable focus sessions</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            <span>Goal tracking and progress monitoring</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            <span>Data export in multiple formats</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            <span>Mobile-responsive design</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-6 md:col-span-2">
+                    <h2 class="text-2xl font-bold mb-4 text-purple-600">Best Practices</h2>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-calendar-day text-purple-600 text-2xl"></i>
+                            </div>
+                            <h3 class="font-semibold mb-2">Plan Your Day</h3>
+                            <p class="text-sm text-gray-600">Always start with a clear schedule and defined priorities.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-target text-purple-600 text-2xl"></i>
+                            </div>
+                            <h3 class="font-semibold mb-2">Set Micro-Goals</h3>
+                            <p class="text-sm text-gray-600">Break everything into 15-minute actionable tasks.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-chart-line text-purple-600 text-2xl"></i>
+                            </div>
+                            <h3 class="font-semibold mb-2">Review Progress</h3>
+                            <p class="text-sm text-gray-600">Regularly check analytics to identify improvement areas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="card p-6 text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-tasks text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-blue-600" id="tasksCompleted">0</h3>
+                    <p class="text-gray-600">Tasks Completed Today</p>
+                </div>
+                <div class="card p-6 text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-clock text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-green-600" id="focusTime">0</h3>
+                    <p class="text-gray-600">Focus Hours Today</p>
+                </div>
+                <div class="card p-6 text-center">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shield-alt text-red-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-red-600" id="distractionsCount">0</h3>
+                    <p class="text-gray-600">Distractions Logged</p>
+                </div>
+                <div class="card p-6 text-center">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-trophy text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-purple-600" id="streakCount">0</h3>
+                    <p class="text-gray-600">Current Streak</p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4">Today's Progress</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm font-medium">Task Completion</span>
+                                <span class="text-sm font-medium" id="taskProgress">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full" id="taskProgressBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm font-medium">Focus Goal</span>
+                                <span class="text-sm font-medium" id="focusProgress">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-green-600 h-2 rounded-full" id="focusProgressBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4">Quick Actions</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button class="btn btn-primary" onclick="switchTab('tracker')">
+                            <i class="fas fa-plus mr-2"></i>Add Time Block
+                        </button>
+                        <button class="btn bg-green-600 text-white hover:bg-green-700" onclick="switchTab('focus')">
+                            <i class="fas fa-play mr-2"></i>Start Focus
+                        </button>
+                        <button class="btn bg-purple-600 text-white hover:bg-purple-700" onclick="switchTab('tasks')">
+                            <i class="fas fa-tasks mr-2"></i>Add Task
+                        </button>
+                        <button class="btn bg-red-600 text-white hover:bg-red-700" onclick="switchTab('distractions')">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>Log Distraction
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daily Tracker Tab -->
+        <div id="tracker" class="tab-content hidden">
+            <div class="card p-6 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">Daily Execution Tracker</h2>
+                    <button id="addTimeBlock" class="btn btn-primary">
+                        <i class="fas fa-plus mr-2"></i>Add Time Block
+                    </button>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-3 px-4">Time Block</th>
+                                <th class="text-left py-3 px-4">Planned Task</th>
+                                <th class="text-left py-3 px-4">Status</th>
+                                <th class="text-left py-3 px-4">Time Spent</th>
+                                <th class="text-left py-3 px-4">Resistance</th>
+                                <th class="text-left py-3 px-4">Notes</th>
+                                <th class="text-left py-3 px-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="timeBlocksTable">
+                            <!-- Time blocks will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Breakdown Tab -->
+        <div id="tasks" class="tab-content hidden">
+            <div class="card p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">Task Granularity Map</h2>
+                    <button id="addTask" class="btn btn-primary">
+                        <i class="fas fa-plus mr-2"></i>Add Task
+                    </button>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-3 px-4">Project</th>
+                                <th class="text-left py-3 px-4">Main Task</th>
+                                <th class="text-left py-3 px-4">Micro Tasks</th>
+                                <th class="text-left py-3 px-4">Status</th>
+                                <th class="text-left py-3 px-4">Progress</th>
+                                <th class="text-left py-3 px-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tasksTable">
+                            <!-- Tasks will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Distraction Log Tab -->
+        <div id="distractions" class="tab-content hidden">
+            <div class="grid md:grid-cols-3 gap-6 mb-6">
+                <div class="card p-6 md:col-span-2">
+                    <h3 class="text-xl font-bold mb-4">Quick Log Distraction</h3>
+                    <form id="distractionForm">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Trigger</label>
+                                <input type="text" id="trigger" class="w-full p-2 border rounded-lg" placeholder="What triggered the distraction?">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Platform</label>
+                                <select id="platform" class="w-full p-2 border rounded-lg">
+                                    <option value="">Select platform</option>
+                                    <option value="YouTube">YouTube</option>
+                                    <option value="Instagram">Instagram</option>
+                                    <option value="TikTok">TikTok</option>
+                                    <option value="Facebook">Facebook</option>
+                                    <option value="Twitter">Twitter</option>
+                                    <option value="Web Browsing">Web Browsing</option>
+                                    <option value="Phone">Phone</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Duration (minutes)</label>
+                                <input type="number" id="duration" class="w-full p-2 border rounded-lg" min="1" max="240">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Emotional State</label>
+                                <select id="emotionalState" class="w-full p-2 border rounded-lg">
+                                    <option value="">Select state</option>
+                                    <option value="Bored">Bored</option>
+                                    <option value="Anxious">Anxious</option>
+                                    <option value="Overwhelmed">Overwhelmed</option>
+                                    <option value="Tired">Tired</option>
+                                    <option value="Reward-Seeking">Reward-Seeking</option>
+                                    <option value="Procrastinating">Procrastinating</option>
+                                </select>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium mb-1">Replacement Behavior</label>
+                                <input type="text" id="replacement" class="w-full p-2 border rounded-lg" placeholder="What will you do instead next time?">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-4">
+                            <i class="fas fa-save mr-2"></i>Log Distraction
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4">Today's Distractions</h3>
+                    <div id="todayDistractions" class="space-y-3">
+                        <!-- Today's distractions will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-6">
+                <h3 class="text-xl font-bold mb-4">Distraction History</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-3 px-4">Time</th>
+                                <th class="text-left py-3 px-4">Trigger</th>
+                                <th class="text-left py-3 px-4">Platform</th>
+                                <th class="text-left py-3 px-4">Duration</th>
+                                <th class="text-left py-3 px-4">Emotional State</th>
+                                <th class="text-left py-3 px-4">Replacement</th>
+                                <th class="text-left py-3 px-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="distractionsTable">
+                            <!-- Distractions will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Focus Timer Tab -->
+        <div id="focus" class="tab-content hidden">
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="card p-8 text-center">
+                    <h2 class="text-2xl font-bold mb-6">Focus Session</h2>
+                    
+                    <!-- Timer Display -->
+                    <div class="relative mb-8">
+                        <svg class="progress-ring w-64 h-64 mx-auto" viewBox="0 0 120 120">
+                            <circle class="progress-ring-background" cx="60" cy="60" r="52" fill="transparent" stroke="#e5e7eb" stroke-width="8"/>
+                            <circle id="progressCircle" class="progress-ring-circle" cx="60" cy="60" r="52" fill="transparent" stroke="var(--primary)" stroke-width="8" stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="timer-display" id="timerDisplay">25:00</div>
+                        </div>
+                    </div>
+
+                    <!-- Timer Controls -->
+                    <div class="space-y-4">
+                        <div class="flex justify-center space-x-4">
+                            <button id="startTimer" class="btn btn-primary">
+                                <i class="fas fa-play mr-2"></i>Start
+                            </button>
+                            <button id="pauseTimer" class="btn bg-yellow-600 text-white hover:bg-yellow-700" disabled>
+                                <i class="fas fa-pause mr-2"></i>Pause
+                            </button>
+                            <button id="resetTimer" class="btn bg-gray-600 text-white hover:bg-gray-700">
+                                <i class="fas fa-stop mr-2"></i>Reset
+                            </button>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Session Duration</label>
+                            <input type="range" id="durationSlider" min="25" max="120" step="5" value="25" class="w-full">
+                            <div class="flex justify-between text-sm text-gray-500">
+                                <span>25 min</span>
+                                <span id="durationValue">25 min</span>
+                                <span>120 min</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold mb-4">Session Settings</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Session Type</label>
+                                <select id="sessionType" class="w-full p-2 border rounded-lg">
+                                    <option value="work">Work Session</option>
+                                    <option value="study">Study Session</option>
+                                    <option value="creative">Creative Work</option>
+                                    <option value="planning">Planning & Review</option>
+                                    <option value="learning">Learning & Development</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Current Task</label>
+                                <input type="text" id="currentTask" class="w-full p-2 border rounded-lg" placeholder="What are you working on?">
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" id="notifications" class="rounded">
+                                <label for="notifications" class="text-sm">Enable notifications</label>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" id="autoBreak" class="rounded">
+                                <label for="autoBreak" class="text-sm">Auto-start break timer</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold mb-4">Today's Focus Stats</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span>Sessions Completed:</span>
+                                <span class="font-bold" id="sessionsCompleted">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Total Focus Time:</span>
+                                <span class="font-bold" id="totalFocusTime">0h 0m</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Average Session:</span>
+                                <span class="font-bold" id="averageSession">0m</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Productivity Score:</span>
+                                <span class="font-bold text-green-600" id="productivityScore">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold mb-4">Quick Presets</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button class="btn bg-blue-600 text-white hover:bg-blue-700" onclick="setTimer(25)">
+                                Pomodoro (25m)
+                            </button>
+                            <button class="btn bg-green-600 text-white hover:bg-green-700" onclick="setTimer(45)">
+                                Deep Work (45m)
+                            </button>
+                            <button class="btn bg-purple-600 text-white hover:bg-purple-700" onclick="setTimer(60)">
+                                Study (60m)
+                            </button>
+                            <button class="btn bg-red-600 text-white hover:bg-red-700" onclick="setTimer(90)">
+                                Flow (90m)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Goals Tab -->
+        <div id="goals" class="tab-content hidden">
+            <div class="grid md:grid-cols-3 gap-6 mb-6">
+                <div class="card p-6 md:col-span-2">
+                    <h3 class="text-xl font-bold mb-4">Create New Goal</h3>
+                    <form id="goalForm">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Goal Title</label>
+                                <input type="text" id="goalTitle" class="w-full p-2 border rounded-lg" placeholder="Enter your goal" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Category</label>
+                                <select id="goalCategory" class="w-full p-2 border rounded-lg" required>
+                                    <option value="">Select category</option>
+                                    <option value="productivity">Productivity</option>
+                                    <option value="health">Health & Fitness</option>
+                                    <option value="learning">Learning & Development</option>
+                                    <option value="career">Career & Business</option>
+                                    <option value="personal">Personal Growth</option>
+                                    <option value="relationships">Relationships</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Target Value</label>
+                                <input type="number" id="goalTarget" class="w-full p-2 border rounded-lg" placeholder="e.g., 30 days" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Unit</label>
+                                <select id="goalUnit" class="w-full p-2 border rounded-lg" required>
+                                    <option value="days">Days</option>
+                                    <option value="hours">Hours</option>
+                                    <option value="tasks">Tasks</option>
+                                    <option value="points">Points</option>
+                                    <option value="sessions">Sessions</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Start Date</label>
+                                <input type="date" id="goalStartDate" class="w-full p-2 border rounded-lg" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">End Date</label>
+                                <input type="date" id="goalEndDate" class="w-full p-2 border rounded-lg" required>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium mb-1">Description</label>
+                                <textarea id="goalDescription" class="w-full p-2 border rounded-lg" rows="3" placeholder="Describe your goal and why it's important"></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-4">
+                            <i class="fas fa-plus mr-2"></i>Create Goal
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4">Goal Summary</h3>
+                    <div class="space-y-4">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-blue-600" id="activeGoals">0</div>
+                            <div class="text-sm text-gray-600">Active Goals</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-green-600" id="completedGoals">0</div>
+                            <div class="text-sm text-gray-600">Completed Goals</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-purple-600" id="overallProgress">0%</div>
+                            <div class="text-sm text-gray-600">Overall Progress</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-6">
+                <h3 class="text-xl font-bold mb-4">Your Goals</h3>
+                <div id="goalsList" class="space-y-4">
+                    <!-- Goals will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div id="analytics" class="tab-content hidden">
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4">Daily Productivity Trend</h3>
+                    <div class="chart-container">
+                        <canvas id="productivityChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4">Task Completion Rate</h3>
+                    <div class="chart-container">
+                        <canvas id="completionChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4">Distraction Analysis</h3>
+                    <div class="chart-container">
+                        <canvas id="distractionChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4">Focus Time Distribution</h3>
+                    <div class="chart-container">
+                        <canvas id="focusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4">Weekly Summary</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span>Tasks Completed:</span>
+                            <span class="font-bold" id="weeklyTasks">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Focus Hours:</span>
+                            <span class="font-bold" id="weeklyFocus">0h</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Avg. Resistance:</span>
+                            <span class="font-bold" id="avgResistance">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Productivity Score:</span>
+                            <span class="font-bold text-green-600" id="weeklyScore">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4">Insights</h3>
+                    <div id="insights" class="space-y-2 text-sm">
+                        <!-- Insights will be populated here -->
+                    </div>
+                </div>
+
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4">Recommendations</h3>
+                    <div id="recommendations" class="space-y-2 text-sm">
+                        <!-- Recommendations will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Founder Section -->
+    <footer class="founder-section mt-16 py-12 text-white relative">
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+            <div class="mb-8">
+                <div class="inline-block p-4 rounded-full bg-white bg-opacity-20 mb-4">
+                    <i class="fas fa-rocket text-3xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold mb-4">Created by Muhammad Hamza</h2>
+                <p class="text-lg leading-relaxed max-w-3xl mx-auto opacity-95">
+                    Entrepreneur & Visionary on a mission to document the journey to building a $1 Billion empire. 
+                    Sharing my learnings, insights, and strategies with the world. Every tool I create, every lesson I share, 
+                    every breakthrough I achieve - it's all part of adding massive value to your journey while building something extraordinary.
+                </p>
+            </div>
+            
+            <div class="flex justify-center space-x-6 mb-6">
+                <a href="https://www.facebook.com/hmzerajpoot/" target="_blank" class="social-link">
+                    <i class="fab fa-facebook-f text-xl"></i>
+                </a>
+                <a href="https://www.youtube.com/@MuhammadHamza-sm6fq" target="_blank" class="social-link">
+                    <i class="fab fa-youtube text-xl"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/ecommerceamazonbrandmanager/" target="_blank" class="social-link">
+                    <i class="fab fa-linkedin-in text-xl"></i>
+                </a>
+            </div>
+            
+            <div class="text-sm opacity-75">
+                DisciplineOS Pro - The Ultimate Productivity Operating System
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span id="notificationText"></span>
+    </div>
+
+    <script>
+        // Global Variables
+        let currentTab = 'instructions';
+        let timeBlocks = JSON.parse(localStorage.getItem('timeBlocks')) || [];
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let distractions = JSON.parse(localStorage.getItem('distractions')) || [];
+        let goals = JSON.parse(localStorage.getItem('goals')) || [];
+        let focusSessions = JSON.parse(localStorage.getItem('focusSessions')) || [];
+        
+        let timerInterval;
+        let isTimerRunning = false;
+        let remainingTime = 25 * 60; // 25 minutes in seconds
+        let totalTime = 25 * 60;
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            loadData();
+            updateDashboard();
+            initializeTimer();
+            initializeCharts();
+        });
+
+        // App Initialization
+        function initializeApp() {
+            // Tab switching
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const tab = button.getAttribute('data-tab');
+                    switchTab(tab);
+                });
+            });
+
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+            // Export button
+            document.getElementById('exportBtn').addEventListener('click', exportData);
+
+            // Form submissions
+            document.getElementById('distractionForm').addEventListener('submit', addDistraction);
+            document.getElementById('goalForm').addEventListener('submit', addGoal);
+
+            // Button events
+            document.getElementById('addTimeBlock').addEventListener('click', addTimeBlock);
+            document.getElementById('addTask').addEventListener('click', addTask);
+
+            // Timer controls
+            document.getElementById('startTimer').addEventListener('click', startTimer);
+            document.getElementById('pauseTimer').addEventListener('click', pauseTimer);
+            document.getElementById('resetTimer').addEventListener('click', resetTimer);
+
+            // Duration slider
+            const durationSlider = document.getElementById('durationSlider');
+            durationSlider.addEventListener('input', function() {
+                const duration = parseInt(this.value);
+                document.getElementById('durationValue').textContent = duration + ' min';
+                if (!isTimerRunning) {
+                    setTimer(duration);
+                }
+            });
+
+            // Set initial date values
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('goalStartDate').value = today;
+        }
+
+        // Tab Switching
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.remove('hidden');
+            
+            // Add active class to selected button
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            
+            currentTab = tabName;
+
+            // Load specific tab data
+            if (tabName === 'analytics') {
+                setTimeout(initializeCharts, 100);
+            }
+        }
+
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('themeToggle');
+            const icon = themeToggle.querySelector('i');
+            
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                icon.className = 'fas fa-moon text-white';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                icon.className = 'fas fa-sun text-white';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.querySelector('#themeToggle i').className = 'fas fa-sun text-white';
+            }
+        }
+
+        // Show Notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            const icon = notification.querySelector('i');
+            
+            notificationText.textContent = message;
+            
+            if (type === 'success') {
+                notification.style.background = 'var(--success)';
+                icon.className = 'fas fa-check-circle mr-2';
+            } else if (type === 'error') {
+                notification.style.background = 'var(--danger)';
+                icon.className = 'fas fa-exclamation-triangle mr-2';
+            }
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Time Block Management
+        function addTimeBlock() {
+            const timeBlock = {
+                id: Date.now(),
+                timeSlot: '09:00-10:00',
+                plannedTask: '',
+                completed: false,
+                timeSpent: 0,
+                resistance: 1,
+                notes: '',
+                date: new Date().toISOString().split('T')[0]
+            };
+            
+            timeBlocks.push(timeBlock);
+            saveData();
+            renderTimeBlocks();
+            showNotification('Time block added successfully!');
+        }
+
+        function renderTimeBlocks() {
+            const tbody = document.getElementById('timeBlocksTable');
+            const today = new Date().toISOString().split('T')[0];
+            const todayBlocks = timeBlocks.filter(block => block.date === today);
+            
+            tbody.innerHTML = todayBlocks.map(block => `
+                <tr>
+                    <td class="py-3 px-4">
+                        <input type="text" value="${block.timeSlot}" onchange="updateTimeBlock(${block.id}, 'timeSlot', this.value)" class="w-full p-1 border rounded">
+                    </td>
+                    <td class="py-3 px-4">
+                        <input type="text" value="${block.plannedTask}" onchange="updateTimeBlock(${block.id}, 'plannedTask', this.value)" class="w-full p-1 border rounded" placeholder="Enter task">
+                    </td>
+                    <td class="py-3 px-4">
+                        <button onclick="toggleTimeBlockStatus(${block.id})" class="px-3 py-1 rounded ${block.completed ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                            ${block.completed ? '✅ Done' : '❌ Pending'}
+                        </button>
+                    </td>
+                    <td class="py-3 px-4">
+                        <input type="number" value="${block.timeSpent}" onchange="updateTimeBlock(${block.id}, 'timeSpent', parseInt(this.value))" class="w-20 p-1 border rounded" min="0">
+                    </td>
+                    <td class="py-3 px-4">
+                        <select onchange="updateTimeBlock(${block.id}, 'resistance', parseInt(this.value))" class="w-full p-1 border rounded">
+                            ${[1,2,3,4,5].map(level => `<option value="${level}" ${block.resistance === level ? 'selected' : ''}>${level}</option>`).join('')}
+                        </select>
+                    </td>
+                    <td class="py-3 px-4">
+                        <input type="text" value="${block.notes}" onchange="updateTimeBlock(${block.id}, 'notes', this.value)" class="w-full p-1 border rounded" placeholder="Add notes">
+                    </td>
+                    <td class="py-3 px-4">
+                        <button onclick="deleteTimeBlock(${block.id})" class="text-red-600 hover:text-red-800">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateTimeBlock(id, field, value) {
+            const index = timeBlocks.findIndex(block => block.id === id);
+            if (index !== -1) {
+                timeBlocks[index][field] = value;
+                saveData();
+                updateDashboard();
+            }
+        }
+
+        function toggleTimeBlockStatus(id) {
+            const index = timeBlocks.findIndex(block => block.id === id);
+            if (index !== -1) {
+                timeBlocks[index].completed = !timeBlocks[index].completed;
+                saveData();
+                renderTimeBlocks();
+                updateDashboard();
+                showNotification('Time block status updated!');
+            }
+        }
+
+        function deleteTimeBlock(id) {
+            timeBlocks = timeBlocks.filter(block => block.id !== id);
+            saveData();
+            renderTimeBlocks();
+            updateDashboard();
+            showNotification('Time block deleted!');
+        }
+
+        // Task Management
+        function addTask() {
+            const task = {
+                id: Date.now(),
+                project: '',
+                mainTask: '',
+                microTasks: [],
+                status: 'Not Started',
+                progress: 0,
+                date: new Date().toISOString().split('T')[0]
+            };
+            
+            tasks.push(task);
+            saveData();
+            renderTasks();
+            showNotification('Task added successfully!');
+        }
+
+        function renderTasks() {
+            const tbody = document.getElementById('tasksTable');
+            
+            tbody.innerHTML = tasks.map(task => `
+                <tr>
+                    <td class="py-3 px-4">
+                        <input type="text" value="${task.project}" onchange="updateTask(${task.id}, 'project', this.value)" class="w-full p-1 border rounded" placeholder="Project name">
+                    </td>
+                    <td class="py-3 px-4">
+                        <input type="text" value="${task.mainTask}" onchange="updateTask(${task.id}, 'mainTask', this.value)" class="w-full p-1 border rounded" placeholder="Main task">
+                    </td>
+                    <td class="py-3 px-4">
+                        <div class="space-y-1">
+                            ${task.microTasks.map((microTask, index) => `
+                                <div class="flex items-center space-x-2">
+                                    <input type="text" value="${microTask}" onchange="updateMicroTask(${task.id}, ${index}, this.value)" class="flex-1 p-1 border rounded text-sm">
+                                    <button onclick="removeMicroTask(${task.id}, ${index})" class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            `).join('')}
+                            <button onclick="addMicroTask(${task.id})" class="text-blue-600 hover:text-blue-800 text-sm">
+                                <i class="fas fa-plus mr-1"></i>Add micro-task
+                            </button>
+                        </div>
+                    </td>
+                    <td class="py-3 px-4">
+                        <select onchange="updateTask(${task.id}, 'status', this.value)" class="w-full p-1 border rounded">
+                            <option value="Not Started" ${task.status === 'Not Started' ? 'selected' : ''}>Not Started</option>
+                            <option value="In Progress" ${task.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                            <option value="Done" ${task.status === 'Done' ? 'selected' : ''}>Done</option>
+                        </select>
+                    </td>
+                    <td class="py-3 px-4">
+                        <div class="flex items-center space-x-2">
+                            <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: ${task.progress}%"></div>
+                            </div>
+                            <span class="text-sm font-medium">${task.progress}%</span>
+                        </div>
+                    </td>
+                    <td class="py-3 px-4">
+                        <button onclick="deleteTask(${task.id})" class="text-red-600 hover:text-red-800">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateTask(id, field, value) {
+            const index = tasks.findIndex(task => task.id === id);
+            if (index !== -1) {
+                tasks[index][field] = value;
+                
+                // Calculate progress based on status
+                if (field === 'status') {
+                    switch(value) {
+                        case 'Not Started':
+                            tasks[index].progress = 0;
+                            break;
+                        case 'In Progress':
+                            tasks[index].progress = 50;
+                            break;
+                        case 'Done':
+                            tasks[index].progress = 100;
+                            break;
+                    }
+                }
+                
+                saveData();
+                renderTasks();
+                updateDashboard();
+            }
+        }
+
+        function addMicroTask(taskId) {
+            const index = tasks.findIndex(task => task.id === taskId);
+            if (index !== -1) {
+                tasks[index].microTasks.push('');
+                saveData();
+                renderTasks();
+            }
+        }
+
+        function updateMicroTask(taskId, microTaskIndex, value) {
+            const index = tasks.findIndex(task => task.id === taskId);
+            if (index !== -1) {
+                tasks[index].microTasks[microTaskIndex] = value;
+                saveData();
+            }
+        }
+
+        function removeMicroTask(taskId, microTaskIndex) {
+            const index = tasks.findIndex(task => task.id === taskId);
+            if (index !== -1) {
+                tasks[index].microTasks.splice(microTaskIndex, 1);
+                saveData();
+                renderTasks();
+            }
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(task => task.id !== id);
+            saveData();
+            renderTasks();
+            updateDashboard();
+            showNotification('Task deleted!');
+        }
+
+        // Distraction Management
+        function addDistraction(e) {
+            e.preventDefault();
+            
+            const distraction = {
+                id: Date.now(),
+                timestamp: new Date().toISOString(),
+                trigger: document.getElementById('trigger').value,
+                platform: document.getElementById('platform').value,
+                duration: parseInt(document.getElementById('duration').value) || 0,
+                emotionalState: document.getElementById('emotionalState').value,
+                replacement: document.getElementById('replacement').value,
+                date: new Date().toISOString().split('T')[0]
+            };
+            
+            distractions.push(distraction);
+            saveData();
+            renderDistractions();
+            renderTodayDistractions();
+            updateDashboard();
+            document.getElementById('distractionForm').reset();
+            showNotification('Distraction logged successfully!');
+        }
+
+        function renderDistractions() {
+            const tbody = document.getElementById('distractionsTable');
+            
+            tbody.innerHTML = distractions.map(distraction => `
+                <tr>
+                    <td class="py-3 px-4">${new Date(distraction.timestamp).toLocaleTimeString()}</td>
+                    <td class="py-3 px-4">${distraction.trigger}</td>
+                    <td class="py-3 px-4">${distraction.platform}</td>
+                    <td class="py-3 px-4">${distraction.duration}m</td>
+                    <td class="py-3 px-4">${distraction.emotionalState}</td>
+                    <td class="py-3 px-4">${distraction.replacement}</td>
+                    <td class="py-3 px-4">
+                        <button onclick="deleteDistraction(${distraction.id})" class="text-red-600 hover:text-red-800">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderTodayDistractions() {
+            const container = document.getElementById('todayDistractions');
+            const today = new Date().toISOString().split('T')[0];
+            const todayDistractions = distractions.filter(d => d.date === today);
+            
+            if (todayDistractions.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">No distractions logged today. Great job!</p>';
+                return;
+            }
+            
+            container.innerHTML = todayDistractions.map(distraction => `
+                <div class="bg-red-50 p-3 rounded-lg">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="font-medium">${distraction.platform}</div>
+                            <div class="text-sm text-gray-600">${distraction.duration}m - ${distraction.emotionalState}</div>
+                        </div>
+                        <div class="text-xs text-gray-500">${new Date(distraction.timestamp).toLocaleTimeString()}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteDistraction(id) {
+            distractions = distractions.filter(d => d.id !== id);
+            saveData();
+            renderDistractions();
+            renderTodayDistractions();
+            updateDashboard();
+            showNotification('Distraction deleted!');
+        }
+
+        // Goal Management
+        function addGoal(e) {
+            e.preventDefault();
+            
+            const goal = {
+                id: Date.now(),
+                title: document.getElementById('goalTitle').value,
+                category: document.getElementById('goalCategory').value,
+                target: parseInt(document.getElementById('goalTarget').value),
+                unit: document.getElementById('goalUnit').value,
+                startDate: document.getElementById('goalStartDate').value,
+                endDate: document.getElementById('goalEndDate').value,
+                description: document.getElementById('goalDescription').value,
+                progress: 0,
+                status: 'active',
+                createdAt: new Date().toISOString()
+            };
+            
+            goals.push(goal);
+            saveData();
+            renderGoals();
+            updateGoalSummary();
+            document.getElementById('goalForm').reset();
+            showNotification('Goal created successfully!');
+        }
+
+        function renderGoals() {
+            const container = document.getElementById('goalsList');
+            
+            if (goals.length === 0) {
+                container.innerHTML = '<p class="text-gray-500">No goals created yet. Start by creating your first goal!</p>';
+                return;
+            }
+            
+            container.innerHTML = goals.map(goal => `
+                <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h4 class="font-bold">${goal.title}</h4>
+                            <p class="text-sm text-gray-600">${goal.category} - ${goal.target} ${goal.unit}</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="updateGoalProgress(${goal.id})" class="text-blue-600 hover:text-blue-800">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button onclick="deleteGoal(${goal.id})" class="text-red-600 hover:text-red-800">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm">Progress</span>
+                            <span class="text-sm font-medium">${goal.progress}/${goal.target} ${goal.unit} (${Math.round((goal.progress/goal.target)*100)}%)</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-blue-600 h-2 rounded-full" style="width: ${Math.min((goal.progress/goal.target)*100, 100)}%"></div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500">${goal.description}</p>
+                    <p class="text-xs text-gray-500 mt-1">${goal.startDate} to ${goal.endDate}</p>
+                </div>
+            `).join('');
+        }
+
+        function updateGoalProgress(id) {
+            const progress = prompt('Enter progress amount:');
+            if (progress && !isNaN(progress)) {
+                const index = goals.findIndex(goal => goal.id === id);
+                if (index !== -1) {
+                    goals[index].progress += parseInt(progress);
+                    if (goals[index].progress >= goals[index].target) {
+                        goals[index].status = 'completed';
+                        showNotification('Congratulations! Goal completed!');
+                    }
+                    saveData();
+                    renderGoals();
+                    updateGoalSummary();
+                }
+            }
+        }
+
+        function deleteGoal(id) {
+            goals = goals.filter(goal => goal.id !== id);
+            saveData();
+            renderGoals();
+            updateGoalSummary();
+            showNotification('Goal deleted!');
+        }
+
+        function updateGoalSummary() {
+            const activeGoals = goals.filter(g => g.status === 'active').length;
+            const completedGoals = goals.filter(g => g.status === 'completed').length;
+            const totalProgress = goals.length > 0 ? Math.round(goals.reduce((acc, goal) => acc + (goal.progress/goal.target)*100, 0) / goals.length) : 0;
+            
+            document.getElementById('activeGoals').textContent = activeGoals;
+            document.getElementById('completedGoals').textContent = completedGoals;
+            document.getElementById('overallProgress').textContent = totalProgress + '%';
+        }
+
+        // Timer Functions
+        function initializeTimer() {
+            updateTimerDisplay();
+            updateProgressRing();
+        }
+
+        function setTimer(minutes) {
+            if (!isTimerRunning) {
+                remainingTime = minutes * 60;
+                totalTime = minutes * 60;
+                document.getElementById('durationSlider').value = minutes;
+                document.getElementById('durationValue').textContent = minutes + ' min';
+                updateTimerDisplay();
+                updateProgressRing();
+            }
+        }
+
+        function startTimer() {
+            if (!isTimerRunning) {
+                isTimerRunning = true;
+                document.getElementById('startTimer').disabled = true;
+                document.getElementById('pauseTimer').disabled = false;
+                
+                const currentTask = document.getElementById('currentTask').value || 'Focus Session';
+                
+                timerInterval = setInterval(() => {
+                    remainingTime--;
+                    updateTimerDisplay();
+                    updateProgressRing();
+                    
+                    if (remainingTime <= 0) {
+                        completeTimer();
+                    }
+                }, 1000);
+                
+                showNotification(`Started ${Math.floor(totalTime/60)}-minute focus session!`);
+            }
+        }
+
+        function pauseTimer() {
+            if (isTimerRunning) {
+                isTimerRunning = false;
+                clearInterval(timerInterval);
+                document.getElementById('startTimer').disabled = false;
+                document.getElementById('pauseTimer').disabled = true;
+                showNotification('Timer paused');
+            }
+        }
+
+        function resetTimer() {
+            isTimerRunning = false;
+            clearInterval(timerInterval);
+            const duration = parseInt(document.getElementById('durationSlider').value);
+            remainingTime = duration * 60;
+            totalTime = duration * 60;
+            
+            document.getElementById('startTimer').disabled = false;
+            document.getElementById('pauseTimer').disabled = true;
+            
+            updateTimerDisplay();
+            updateProgressRing();
+            showNotification('Timer reset');
+        }
+
+        function completeTimer() {
+            isTimerRunning = false;
+            clearInterval(timerInterval);
+            
+            const sessionData = {
+                id: Date.now(),
+                duration: Math.floor(totalTime / 60),
+                type: document.getElementById('sessionType').value,
+                task: document.getElementById('currentTask').value,
+                completedAt: new Date().toISOString(),
+                date: new Date().toISOString().split('T')[0]
+            };
+            
+            focusSessions.push(sessionData);
+            saveData();
+            updateFocusStats();
+            updateDashboard();
+            
+            document.getElementById('startTimer').disabled = false;
+            document.getElementById('pauseTimer').disabled = true;
+            
+            // Reset timer for next session
+            const duration = parseInt(document.getElementById('durationSlider').value);
+            remainingTime = duration * 60;
+            totalTime = duration * 60;
+            updateTimerDisplay();
+            updateProgressRing();
+            
+            showNotification('Focus session completed! Great work!');
+            
+            // Play notification sound or show browser notification
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('DisciplineOS Pro', {
+                    body: 'Focus session completed!',
+                    icon: '/favicon.ico'
+                });
+            }
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+            const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('timerDisplay').textContent = display;
+        }
+
+        function updateProgressRing() {
+            const circle = document.getElementById('progressCircle');
+            const progress = (totalTime - remainingTime) / totalTime;
+            const circumference = 2 * Math.PI * 52;
+            const offset = circumference * (1 - progress);
+            circle.style.strokeDashoffset = offset;
+        }
+
+        function updateFocusStats() {
+            const today = new Date().toISOString().split('T')[0];
+            const todaySessions = focusSessions.filter(s => s.date === today);
+            
+            const sessionsCount = todaySessions.length;
+            const totalMinutes = todaySessions.reduce((acc, session) => acc + session.duration, 0);
+            const averageSession = sessionsCount > 0 ? Math.round(totalMinutes / sessionsCount) : 0;
+            const productivityScore = Math.min(Math.round((totalMinutes / 480) * 100), 100); // Based on 8 hours target
+            
+            document.getElementById('sessionsCompleted').textContent = sessionsCount;
+            document.getElementById('totalFocusTime').textContent = `${Math.floor(totalMinutes/60)}h ${totalMinutes%60}m`;
+            document.getElementById('averageSession').textContent = averageSession + 'm';
+            document.getElementById('productivityScore').textContent = productivityScore + '%';
+        }
+
+        // Dashboard Updates
+        function updateDashboard() {
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Tasks completed today
+            const todayTimeBlocks = timeBlocks.filter(block => block.date === today);
+            const completedTasks = todayTimeBlocks.filter(block => block.completed).length;
+            document.getElementById('tasksCompleted').textContent = completedTasks;
+            
+            // Focus time today
+            const todayFocusSessions = focusSessions.filter(s => s.date === today);
+            const focusMinutes = todayFocusSessions.reduce((acc, session) => acc + session.duration, 0);
+            document.getElementById('focusTime').textContent = Math.round(focusMinutes / 60 * 10) / 10;
+            
+            // Distractions today
+            const todayDistractions = distractions.filter(d => d.date === today);
+            document.getElementById('distractionsCount').textContent = todayDistractions.length;
+            
+            // Streak calculation (simplified)
+            document.getElementById('streakCount').textContent = Math.max(completedTasks - todayDistractions.length, 0);
+            
+            // Progress bars
+            const taskProgress = todayTimeBlocks.length > 0 ? Math.round((completedTasks / todayTimeBlocks.length) * 100) : 0;
+            document.getElementById('taskProgress').textContent = taskProgress + '%';
+            document.getElementById('taskProgressBar').style.width = taskProgress + '%';
+            
+            const focusProgress = Math.min(Math.round((focusMinutes / 480) * 100), 100); // 8 hour target
+            document.getElementById('focusProgress').textContent = focusProgress + '%';
+            document.getElementById('focusProgressBar').style.width = focusProgress + '%';
+            
+            updateFocusStats();
+        }
+
+        // Analytics Charts
+        function initializeCharts() {
+            // Only initialize if analytics tab is visible
+            if (document.getElementById('analytics').classList.contains('hidden')) {
+                return;
+            }
+
+            // Productivity Trend Chart
+            const productivityCtx = document.getElementById('productivityChart');
+            if (productivityCtx && !productivityCtx.chart) {
+                const last7Days = Array.from({length: 7}, (_, i) => {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    return date.toISOString().split('T')[0];
+                }).reverse();
+
+                const productivityData = last7Days.map(date => {
+                    const dayTimeBlocks = timeBlocks.filter(block => block.date === date);
+                    const completed = dayTimeBlocks.filter(block => block.completed).length;
+                    return dayTimeBlocks.length > 0 ? Math.round((completed / dayTimeBlocks.length) * 100) : 0;
+                });
+
+                productivityCtx.chart = new Chart(productivityCtx, {
+                    type: 'line',
+                    data: {
+                        labels: last7Days.map(date => new Date(date).toLocaleDateString()),
+                        datasets: [{
+                            label: 'Productivity %',
+                            data: productivityData,
+                            borderColor: 'rgb(99, 102, 241)',
+                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Task Completion Chart
+            const completionCtx = document.getElementById('completionChart');
+            if (completionCtx && !completionCtx.chart) {
+                const totalTasks = tasks.length;
+                const completedTasks = tasks.filter(task => task.status === 'Done').length;
+                const inProgressTasks = tasks.filter(task => task.status === 'In Progress').length;
+                const notStartedTasks = tasks.filter(task => task.status === 'Not Started').length;
+
+                completionCtx.chart = new Chart(completionCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Completed', 'In Progress', 'Not Started'],
+                        datasets: [{
+                            data: [completedTasks, inProgressTasks, notStartedTasks],
+                            backgroundColor: [
+                                'rgb(16, 185, 129)',
+                                'rgb(245, 158, 11)',
+                                'rgb(239, 68, 68)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Distraction Analysis Chart
+            const distractionCtx = document.getElementById('distractionChart');
+            if (distractionCtx && !distractionCtx.chart) {
+                const platformCounts = {};
+                distractions.forEach(distraction => {
+                    platformCounts[distraction.platform] = (platformCounts[distraction.platform] || 0) + 1;
+                });
+
+                const platforms = Object.keys(platformCounts);
+                const counts = Object.values(platformCounts);
+
+                distractionCtx.chart = new Chart(distractionCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: platforms,
+                        datasets: [{
+                            label: 'Distraction Count',
+                            data: counts,
+                            backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                            borderColor: 'rgb(239, 68, 68)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Focus Time Distribution Chart
+            const focusCtx = document.getElementById('focusChart');
+            if (focusCtx && !focusCtx.chart) {
+                const sessionTypes = {};
+                focusSessions.forEach(session => {
+                    sessionTypes[session.type] = (sessionTypes[session.type] || 0) + session.duration;
+                });
+
+                const types = Object.keys(sessionTypes);
+                const durations = Object.values(sessionTypes);
+
+                focusCtx.chart = new Chart(focusCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: types,
+                        datasets: [{
+                            data: durations,
+                            backgroundColor: [
+                                'rgb(99, 102, 241)',
+                                'rgb(16, 185, 129)',
+                                'rgb(245, 158, 11)',
+                                'rgb(139, 92, 246)',
+                                'rgb(59, 130, 246)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+
+            updateAnalyticsSummary();
+        }
+
+        function updateAnalyticsSummary() {
+            const weekStart = new Date();
+            weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+            const weekStartStr = weekStart.toISOString().split('T')[0];
+
+            // Weekly tasks
+            const weeklyTimeBlocks = timeBlocks.filter(block => block.date >= weekStartStr);
+            const weeklyCompleted = weeklyTimeBlocks.filter(block => block.completed).length;
+            document.getElementById('weeklyTasks').textContent = weeklyCompleted;
+
+            // Weekly focus hours
+            const weeklyFocus = focusSessions
+                .filter(session => session.date >= weekStartStr)
+                .reduce((acc, session) => acc + session.duration, 0);
+            document.getElementById('weeklyFocus').textContent = Math.round(weeklyFocus / 60) + 'h';
+
+            // Average resistance
+            const avgResistance = weeklyTimeBlocks.length > 0 
+                ? Math.round(weeklyTimeBlocks.reduce((acc, block) => acc + block.resistance, 0) / weeklyTimeBlocks.length * 10) / 10
+                : 0;
+            document.getElementById('avgResistance').textContent = avgResistance;
+
+            // Weekly productivity score
+            const weeklyScore = weeklyTimeBlocks.length > 0 
+                ? Math.round((weeklyCompleted / weeklyTimeBlocks.length) * 100)
+                : 0;
+            document.getElementById('weeklyScore').textContent = weeklyScore + '%';
+
+            updateInsights();
+            updateRecommendations();
+        }
+
+        function updateInsights() {
+            const container = document.getElementById('insights');
+            const insights = [];
+
+            // Most productive time analysis
+            const timeSlotCounts = {};
+            timeBlocks.filter(block => block.completed).forEach(block => {
+                const timeSlot = block.timeSlot.split('-')[0];
+                timeSlotCounts[timeSlot] = (timeSlotCounts[timeSlot] || 0) + 1;
+            });
+
+            const bestTime = Object.keys(timeSlotCounts).reduce((a, b) => 
+                timeSlotCounts[a] > timeSlotCounts[b] ? a : b, Object.keys(timeSlotCounts)[0]);
+
+            if (bestTime) {
+                insights.push(`Your most productive time is ${bestTime}`);
+            }
+
+            // Common distractions
+            const commonDistraction = distractions
+                .reduce((acc, d) => {
+                    acc[d.platform] = (acc[d.platform] || 0) + 1;
+                    return acc;
+                }, {});
+
+            const topDistraction = Object.keys(commonDistraction).reduce((a, b) => 
+                commonDistraction[a] > commonDistraction[b] ? a : b, Object.keys(commonDistraction)[0]);
+
+            if (topDistraction && commonDistraction[topDistraction] > 1) {
+                insights.push(`${topDistraction} is your biggest distraction source`);
+            }
+
+            // Focus session insights
+            if (focusSessions.length > 0) {
+                const avgFocusSession = Math.round(focusSessions.reduce((acc, s) => acc + s.duration, 0) / focusSessions.length);
+                insights.push(`Your average focus session is ${avgFocusSession} minutes`);
+            }
+
+            container.innerHTML = insights.map(insight => 
+                `<div class="bg-blue-50 dark:bg-blue-900 p-2 rounded text-blue-800 dark:text-blue-200">• ${insight}</div>`
+            ).join('');
+        }
+
+        function updateRecommendations() {
+            const container = document.getElementById('recommendations');
+            const recommendations = [];
+
+            // Resistance level recommendations
+            const avgResistance = timeBlocks.length > 0 
+                ? timeBlocks.reduce((acc, block) => acc + block.resistance, 0) / timeBlocks.length
+                : 0;
+
+            if (avgResistance > 3) {
+                recommendations.push('Try breaking tasks into smaller chunks to reduce resistance');
+            }
+
+            // Distraction recommendations
+            const todayDistractions = distractions.filter(d => d.date === new Date().toISOString().split('T')[0]);
+            if (todayDistractions.length > 3) {
+                recommendations.push('Consider using website blockers during focus sessions');
+            }
+
+            // Focus time recommendations
+            const todayFocus = focusSessions
+                .filter(s => s.date === new Date().toISOString().split('T')[0])
+                .reduce((acc, s) => acc + s.duration, 0);
+
+            if (todayFocus < 120) { // Less than 2 hours
+                recommendations.push('Aim for at least 2 hours of focused work per day');
+            }
+
+            // Goal progress recommendations
+            const activeGoals = goals.filter(g => g.status === 'active');
+            const behindGoals = activeGoals.filter(goal => {
+                const daysPassed = Math.floor((new Date() - new Date(goal.startDate)) / (1000 * 60 * 60 * 24));
+                const totalDays = Math.floor((new Date(goal.endDate) - new Date(goal.startDate)) / (1000 * 60 * 60 * 24));
+                const expectedProgress = (daysPassed / totalDays) * goal.target;
+                return goal.progress < expectedProgress * 0.8; // 80% of expected
+            });
+
+            if (behindGoals.length > 0) {
+                recommendations.push(`Focus more on ${behindGoals.length} goal(s) that are behind schedule`);
+            }
+
+            container.innerHTML = recommendations.map(rec => 
+                `<div class="bg-green-50 dark:bg-green-900 p-2 rounded text-green-800 dark:text-green-200">• ${rec}</div>`
+            ).join('');
+        }
+
+        // Data Management
+        function saveData() {
+            localStorage.setItem('timeBlocks', JSON.stringify(timeBlocks));
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            localStorage.setItem('distractions', JSON.stringify(distractions));
+            localStorage.setItem('goals', JSON.stringify(goals));
+            localStorage.setItem('focusSessions', JSON.stringify(focusSessions));
+        }
+
+        function loadData() {
+            renderTimeBlocks();
+            renderTasks();
+            renderDistractions();
+            renderTodayDistractions();
+            renderGoals();
+            updateGoalSummary();
+        }
+
+        function exportData() {
+            const data = {
+                timeBlocks,
+                tasks,
+                distractions,
+                goals,
+                focusSessions,
+                exportDate: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `disciplineos-data-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showNotification('Data exported successfully!');
+        }
+
+        // Initialize theme on load
+        loadTheme();
+
+        // Request notification permission
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+    </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"961e0244df3e4128","serverTiming":{"name":{"cfExtPri":true,"cfEdge":true,"cfOrigin":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"version":"2025.7.0","token":"4edd5f8ec12a48cfa682ab8261b80a79"}' crossorigin="anonymous"></script>
+</body>
+</html>
+    <script id="html_badge_script1">
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDlFt5ZJgZWj%2Fqsk1I3gEQG4qTdrX9aZ2WN3aCz5ZXWzaXgBZureXtGaZgLYxQKAU%2FSRhuohjU23JLbuAb82CxT%2BFPPnNIXhP25x%2Fwz5lb1GnNu5Rb%2FgDaT15uxcTu7%2BNJJfiFZRDXdoD4rZAyAvtEK6HVErFSrVo5GivpzPcrrWYC%2Bcser8uC6J5PgUW5DFrtADjyWMxWAc%2FKYphaHPxHQ5QhNDCAqigF%2B0%2F%2BOuRFnU1Ez%2Bo%2F7h%2BmY%2FSAeTz6PdCDmzOcHX19EhYPeAMAfv3C1fuZiFDynuwXliHSfWGDfaRi%2FaHW0VFEY1baxBO3LYriatqSdzmvEDVEuQOtZ6HYXUaPZv7LUd9K%2B%2Fg7d9d3%2BIdPQmVec9bPauNUVVwX95KALsIW6G4hmMm%2BZbH0iVjxtpv%2BGmTEddwy4nN%2BCtDbOHtM9TTbaTjUUVR1NuOrz5tDKsqqK3J2ZtauNXNYbGUFb%2FdOztgZzBf%2BoMdFsZGfkJYaLwi3xl9%2BGJ76OPVM4tFX%2Fo2hhtJ1i0zEt0k0oTFqlk%3D";
+        window.__genspark_locale = "en-US";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDlFt5ZJgZWj/qsk1I3gEQG4qTdrX9aZ2WN3aCz5ZXWzaXgBZureXtGaZgLYxQKAU/SRhuohjU23JLbuAb82CxT+FPPnNIXhP25x/wz5lb1GnNu5Rb/gDaT15uxcTu7+NJJfiFZRDXdoD4rZAyAvtEK6HVErFSrVo5GivpzPcrrWYC+cser8uC6J5PgUW5DFrtADjyWMxWAc/KYphaHPxHQ5QhNDCAqigF+0/+OuRFnU1Ez+o/7h+mY/SAeTz6PdCDmzOcHX19EhYPeAMAfv3C1fuZiFDynuwXliHSfWGDfaRi/aHW0VFEY1baxBO3LYriatqSdzmvEDVEuQOtZ6HYXUaPZv7LUd9K+/g7d9d3+IdPQmVec9bPauNUVVwX95KALsIW6G4hmMm+ZbH0iVjxtpv+GmTEddwy4nN+CtDbOHtM9TTbaTjUUVR1NuOrz5tDKsqqK3J2ZtauNXNYbGUFb/dOztgZzBf+oMdFsZGfkJYaLwi3xl9+GJ76OPVM4tFX/o2hhtJ1i0zEt0k0oTFqlk=";
+    </script>
+    
+        <script id="html_badge_script2" src="https://www.genspark.ai/html_badge.js"></script>
+        
+    <script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
+    
